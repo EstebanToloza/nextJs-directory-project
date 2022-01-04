@@ -1,25 +1,18 @@
 /* eslint-disable react/jsx-key */
-import type {NextPage} from "next";
+import type {GetStaticProps, NextPage} from "next";
 
 import Link from "next/link";
 import {useEffect, useState} from "react";
 
 import StoreCard from "../components/StoreCard";
 import {Store} from "../types";
+import api from "../api";
 
-const Home: NextPage = () => {
-  const [stores, setStores] = useState<Store[]>([]);
+interface Props {
+  stores: Store[];
+}
 
-  useEffect(() => {
-    fetch("/api/stores")
-      .then((res) => res.json())
-      .then((stores: Store[]) => setStores(stores));
-  }, []);
-
-  if (!stores.length) {
-    return <span>cargando...</span>;
-  }
-
+const Home: NextPage<Props> = ({stores}) => {
   return (
     <main style={{display: "flex", flexDirection: "column", gap: 12}}>
       {stores.map((store) => (
@@ -31,6 +24,14 @@ const Home: NextPage = () => {
       ))}
     </main>
   );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const stores = await api.list();
+
+  return {
+    props: {stores},
+  };
 };
 
 export default Home;
