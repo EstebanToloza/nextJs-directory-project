@@ -16,9 +16,9 @@ const Home: NextPage<Props> = ({stores}) => {
   return (
     <main style={{display: "flex", flexDirection: "column", gap: 12}}>
       {stores.map((store) => (
-        <Link href={`/${store.id}`}>
+        <Link key={store.id} href={`/${store.id}`}>
           <a>
-            <StoreCard key={store.id} store={store} />
+            <StoreCard store={store} />
           </a>
         </Link>
       ))}
